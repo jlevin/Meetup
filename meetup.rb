@@ -9,16 +9,16 @@ Geocoder.configure(
 )
 
 # Start up yelp
-client = Yelp::Client.new({ consumer_key: "x3G4T2iDTKoFp9LJK6pkIw",
-                            consumer_secret: "RUCKnoXZYpGkotT4AbEdD5vjF5E",
-                            token: "RXpAIyPszRc1KTEcVXMKBxIxaI1hDYA-",
-                            token_secret: "MgIVGqsHEeRQEOWGiUk7LnHnTn4"
+client = Yelp::Client.new({ consumer_key: INSERT KEY,
+                            consumer_secret: INSERT SECRET,
+                            token: INSERT TOKEN,
+                            token_secret: INSERT TOKEN SECRET
                           })
 
 def midpoint(place_1, place_2)
   
   # Start up Google Maps API
-  gmaps = GoogleMapsService::Client.new(key: 'AIzaSyD5aIWx1yAyM4ZNOMQ-LlOFYb0HGPzEa-0')
+  gmaps = GoogleMapsService::Client.new(key: INSERT KEY)
   
   route = gmaps.directions(
     place_1, place_2,
@@ -96,7 +96,7 @@ puts "\nTop 5 Results:\n\n"
   
   # Calculate driving time for 1st person
   business = [recs.businesses[i].location.coordinate.latitude, recs.businesses[i].location.coordinate.longitude]
-  gmaps = GoogleMapsService::Client.new(key: 'AIzaSyD5aIWx1yAyM4ZNOMQ-LlOFYb0HGPzEa-0')
+  gmaps = GoogleMapsService::Client.new(key: INSERT KEY)
   route = gmaps.directions(
       location_one, business,
       mode: 'driving',
@@ -105,7 +105,7 @@ puts "\nTop 5 Results:\n\n"
   puts route[0][:legs][0][:duration][:text].to_s + " for you."
   
   # Calculate driving time for 2nd person
-  gmaps = GoogleMapsService::Client.new(key: 'AIzaSyD5aIWx1yAyM4ZNOMQ-LlOFYb0HGPzEa-0')
+  gmaps = GoogleMapsService::Client.new(key: INSERT KEY)
   route = gmaps.directions(
       location_two, business,
       mode: 'driving',
