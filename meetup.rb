@@ -1,24 +1,16 @@
 # includes
 require 'Geocoder'
-require 'yelp'
-require 'google_maps_service'
+require_relative 'meetup.config'
 
 #configure Geocoder
 Geocoder.configure(
 :units => :m
 )
 
-# Start up yelp
-client = Yelp::Client.new({ consumer_key: INSERT KEY,
-                            consumer_secret: INSERT SECRET,
-                            token: INSERT TOKEN,
-                            token_secret: INSERT TOKEN SECRET
-                          })
-
 def midpoint(place_1, place_2)
   
   # Start up Google Maps API
-  gmaps = GoogleMapsService::Client.new(key: INSERT KEY)
+  gmaps = GoogleMapsService::Client.new
   
   route = gmaps.directions(
     place_1, place_2,
@@ -83,7 +75,7 @@ meetup = midpoint(midpoint(location_one, location_two), midpoint(location_two, l
 midpoint_coordinates = {latitude: meetup[:lat], longitude: meetup[:lng]}
 
 # get recommendations
-recs = client.search_by_coordinates(midpoint_coordinates, {term: search})
+recs = Yelp.client.search_by_coordinates(midpoint_coordinates, {term: search})
 
 # display recommendations
 puts "\nTop 5 Results:\n\n"
@@ -96,7 +88,7 @@ puts "\nTop 5 Results:\n\n"
   
   # Calculate driving time for 1st person
   business = [recs.businesses[i].location.coordinate.latitude, recs.businesses[i].location.coordinate.longitude]
-  gmaps = GoogleMapsService::Client.new(key: INSERT KEY)
+  gmaps = GoogleMapsService::Client.new
   route = gmaps.directions(
       location_one, business,
       mode: 'driving',
@@ -105,7 +97,7 @@ puts "\nTop 5 Results:\n\n"
   puts route[0][:legs][0][:duration][:text].to_s + " for you."
   
   # Calculate driving time for 2nd person
-  gmaps = GoogleMapsService::Client.new(key: INSERT KEY)
+  gmaps = GoogleMapsService::Client.new
   route = gmaps.directions(
       location_two, business,
       mode: 'driving',
