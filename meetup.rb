@@ -8,27 +8,26 @@ Geocoder.configure(
 )
 
 def midpoint(place_1, place_2)
-  
   # Initialize Google Maps API
   gmaps = GoogleMapsService::Client.new
-  
+
   route = gmaps.directions(
     place_1, place_2,
     mode: 'driving',
     alternatives: false)
-  
+
   # initialize global variables, halfway is half of the total trip distance
   d_sum, midpoint = 0, 0
   halfway = route[0][:legs][0][:distance][:value] / 2
-  
+
   # increments through the steps in the directions until "halfway" is exceeded
   route[0][:legs][0][:steps].each do |x|
     d_sum += x[:distance][:value]
     if d_sum > halfway
-      
+
       # decrease distance by the most recent step
       d_sum -= x[:distance][:value]
-      
+
       # Increment through polyline coordinates until halfway distance is reached
       prev_n = x[:start_location]
       GoogleMapsService::Polyline.decode(x[:polyline][:points]).each do |n|
@@ -38,7 +37,7 @@ def midpoint(place_1, place_2)
           # increase distance by polyline segment length
           d_sum += distance
           prev_n = n
-          
+
         else
           midpoint = prev_n
           return midpoint
@@ -87,7 +86,7 @@ puts "\nTop 5 Results:\n\n"
   recs.businesses[i].categories.each do |n|
     puts n[0]
   end
-  
+
   # Calculate driving distance for 1st person
   business = [recs.businesses[i].location.coordinate.latitude, recs.businesses[i].location.coordinate.longitude]
   gmaps = GoogleMapsService::Client.new
@@ -98,16 +97,16 @@ puts "\nTop 5 Results:\n\n"
 
   # Dispays driving distance for user
   puts route[0][:legs][0][:distance][:text].to_s + " for you."
-  
+
   # Calculate driving distance for 2nd person
   gmaps = GoogleMapsService::Client.new
   route = gmaps.directions(
       location_two, business,
       mode: 'driving',
       alternatives: false)
-  
+
   # Dispays driving distance for other person
   puts route[0][:legs][0][:distance][:text].to_s + " for the other person."
-  
+
   puts "\n"
 end
